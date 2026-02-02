@@ -17,7 +17,7 @@ exports.syncUsers = async (req, res) => {
     try {
         console.log('User Sync requested by:', req.user.name);
 
-        const externalApiUrl = 'https://sistem.stevewalewangko.com:8080/api/hrpersonnel/public?queries=empProjCode%3AC0021&limit=100&offset=0';
+        const externalApiUrl = 'https://system.samuderamuliaabadi.com:8083/api/hrpersonnel/public?queries=empProjCode%3AC0021&limit=250&offset=0';
         const response = await axios.get(externalApiUrl);
 
         if (!response.data || !response.data.data) {
@@ -32,8 +32,8 @@ exports.syncUsers = async (req, res) => {
         let updatedCount = 0;
 
         const syncPromises = externalUsers.map(async (extUser) => {
-            const name = extUser.empName || extUser.name;
-            const employee_id = extUser.empID || extUser.employee_id;
+            const name = extUser.empName;
+            const employee_id = extUser.empNumber;
 
             if (!name || !employee_id) return;
 

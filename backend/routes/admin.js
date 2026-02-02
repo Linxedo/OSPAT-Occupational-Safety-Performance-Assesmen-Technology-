@@ -13,19 +13,21 @@ const userAnswersController = require('../controllers/admin/userAnswersControlle
 
 const router = express.Router();
 
-// Apply authentication middleware to all routes
+// Biking Verifikasi ke Semua Routes API Admin
 router.use(authenticateToken);
 router.use(requireAdmin);
 
-// ============================================================================
-// DASHBOARD API
-// ============================================================================
+// API Routes Admin
+router.post('/sync-users', syncUsersController.syncUsers);
 router.get('/dashboard', dashboardController.getDashboard);
-
-// ============================================================================
-// USERS API
-// ============================================================================
 router.get('/users', usersController.getUsers);
+router.get('/settings', settingsController.getSettings);
+router.get('/settings/stream', settingsController.streamSettings); //Sync Antara Web Dengan Android
+router.get('/questions', questionsController.getQuestions);
+router.get('/history', historyController.getHistory);
+router.get('/user_answers/:resultId', userAnswersController.getUserAnswers);
+router.delete('/questions/:id', questionsController.deleteQuestion);
+router.delete('/users/:id', usersController.deleteUser);
 
 router.post('/users', [
     body('name').notEmpty().withMessage('Name is required'),
@@ -50,16 +52,6 @@ router.put('/users/:id', [
     })
 ], usersController.updateUser);
 
-router.delete('/users/:id', usersController.deleteUser);
-
-// Sync Users from External API
-router.post('/sync-users', syncUsersController.syncUsers);
-
-// ============================================================================
-// SETTINGS API
-// ============================================================================
-router.get('/settings', settingsController.getSettings);
-
 router.post('/settings', [
     body('minimum_passing_score').optional().isInt({ min: 0, max: 10000 }),
     body('hard_mode_threshold').optional().isInt({ min: 0, max: 10000 }),
@@ -82,14 +74,6 @@ router.post('/settings', [
     body('mg5_time_hard').optional().isInt({ min: 250, max: 5000 })
 ], settingsController.updateSettings);
 
-// Server-Sent Events for Real-Time Settings Sync
-router.get('/settings/stream', settingsController.streamSettings);
-
-// ============================================================================
-// QUESTIONS API
-// ============================================================================
-router.get('/questions', questionsController.getQuestions);
-
 router.post('/questions', [
     body('question_text').notEmpty().withMessage('Question text is required'),
     body('answers').isArray().withMessage('Answers array is required')
@@ -99,17 +83,5 @@ router.put('/questions/:id', [
     body('question_text').notEmpty().withMessage('Question text is required'),
     body('answers').isArray().withMessage('Answers array is required')
 ], questionsController.updateQuestion);
-
-router.delete('/questions/:id', questionsController.deleteQuestion);
-
-// ============================================================================
-// HISTORY API
-// ============================================================================
-router.get('/history', historyController.getHistory);
-
-// ============================================================================
-// USER ANSWERS API
-// ============================================================================
-router.get('/user_answers/:resultId', userAnswersController.getUserAnswers);
 
 module.exports = router;

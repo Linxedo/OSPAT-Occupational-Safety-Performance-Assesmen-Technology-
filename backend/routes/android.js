@@ -20,34 +20,24 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-// APPLY MIDDLEWARE TO ALL ROUTES BELOW
+// Biking Verifikasi ke Semua Routes API Android
 router.use(validateApiKey);
 router.use(apiLimiter);
 
-// AUTHENTICATION
+// API Login
 router.post("/login", authController.login);
 
-// QUESTIONS API
+// API Edit Pertanyaan
 router.get("/questions", questionsController.getQuestions);
-
 router.post("/questions", questionsController.createQuestion);
-
 router.put("/questions/:id", questionsController.updateQuestion);
-
 router.delete("/questions/:id", questionsController.deleteQuestion);
 
-// SETTINGS API
+// API Routes Android
 router.get("/settings", settingsController.getSettings);
-
 router.post("/settings", settingsController.updateSettings);
-
-// Server-Sent Events for Real-Time Settings Sync
-router.get("/settings/stream", settingsController.streamSettings);
-
-// TEST RESULTS API
+router.get("/settings/stream", settingsController.streamSettings); //Sync Antara Android Dengan Web
 router.post("/results", testResultsController.saveTestResults);
-
-// USER ANSWERS API
 router.post("/user-answers", userAnswersController.saveUserAnswers);
 
 module.exports = router;

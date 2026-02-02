@@ -3,14 +3,14 @@ const pool = require('../../models/db');
 // Helper to normalize Android naming to backend naming
 const normalizeSettings = (settings) => {
     const normalized = { ...settings };
-    
+
     // Map minigameX_enabled to mgX_enabled
     for (let i = 1; i <= 5; i++) {
         if (settings[`minigame${i}_enabled`] !== undefined) {
             normalized[`mg${i}_enabled`] = settings[`minigame${i}_enabled`];
         }
     }
-    
+
     // Map minigame speed/time settings
     const mappings = {
         'minigame1_speed_normal': 'mg1_speed_normal',
@@ -25,27 +25,27 @@ const normalizeSettings = (settings) => {
         'minigame5_time_normal': 'mg5_time_normal',
         'minigame5_time_hard': 'mg5_time_hard'
     };
-    
+
     Object.entries(mappings).forEach(([android, backend]) => {
         if (settings[android] !== undefined) {
             normalized[backend] = settings[android];
         }
     });
-    
+
     return normalized;
 };
 
 // Helper to convert backend naming to Android naming
 const toAndroidSettings = (settings) => {
     const android = { ...settings };
-    
+
     // Map mgX_enabled to minigameX_enabled
     for (let i = 1; i <= 5; i++) {
         if (settings[`mg${i}_enabled`] !== undefined) {
             android[`minigame${i}_enabled`] = settings[`mg${i}_enabled`];
         }
     }
-    
+
     // Map speed/time settings
     const mappings = {
         'mg1_speed_normal': 'minigame1_speed_normal',
@@ -60,13 +60,13 @@ const toAndroidSettings = (settings) => {
         'mg5_time_normal': 'minigame5_time_normal',
         'mg5_time_hard': 'minigame5_time_hard'
     };
-    
+
     Object.entries(mappings).forEach(([backend, androidKey]) => {
         if (settings[backend] !== undefined) {
             android[androidKey] = settings[backend];
         }
     });
-    
+
     return android;
 };
 
