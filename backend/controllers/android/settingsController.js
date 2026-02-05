@@ -190,3 +190,6 @@ exports.streamSettings = async (req, res) => {
         res.status(500).json({ success: false, message: 'SSE setup failed' });
     }
 };
+
+// Export helper functions for use in other modules
+exports.toAndroidSettings = toAndroidSettings;
