@@ -94,24 +94,37 @@ const Settings = () => {
     }
 
     const handleMinigameSettingsSubmit = (data) => {
+        // Explicitly extract and sanitize ALL fields to be 1000% sure they are correct
         const minigameData = {
-            mg1_enabled: data.mg1_enabled,
-            mg1_speed_normal: data.mg1_speed_normal,
-            mg1_speed_hard: data.mg1_speed_hard,
-            mg2_enabled: data.mg2_enabled,
-            mg2_speed_normal: data.mg2_speed_normal,
-            mg2_speed_hard: data.mg2_speed_hard,
-            mg3_enabled: data.mg3_enabled,
-            mg3_rounds: data.mg3_rounds,
-            mg3_time_normal: data.mg3_time_normal,
-            mg3_time_hard: data.mg3_time_hard,
-            mg4_enabled: data.mg4_enabled,
-            mg4_time_normal: data.mg4_time_normal,
-            mg4_time_hard: data.mg4_time_hard,
-            mg5_enabled: data.mg5_enabled,
-            mg5_time_normal: data.mg5_time_normal,
-            mg5_time_hard: data.mg5_time_hard
+            // Minigame 1
+            mg1_enabled: Boolean(data.mg1_enabled),
+            mg1_speed_normal: Number(data.mg1_speed_normal),
+            mg1_speed_hard: Number(data.mg1_speed_hard),
+
+            // Minigame 2 - The one with reporting issues
+            mg2_enabled: Boolean(data.mg2_enabled),
+            mg2_rounds: Number(data.mg2_rounds),
+            mg2_speed_normal: Number(data.mg2_speed_normal),
+            mg2_speed_hard: Number(data.mg2_speed_hard),
+
+            // Minigame 3
+            mg3_enabled: Boolean(data.mg3_enabled),
+            mg3_rounds: Number(data.mg3_rounds),
+            mg3_time_normal: Number(data.mg3_time_normal),
+            mg3_time_hard: Number(data.mg3_time_hard),
+
+            // Minigame 4
+            mg4_enabled: Boolean(data.mg4_enabled),
+            mg4_time_normal: Number(data.mg4_time_normal),
+            mg4_time_hard: Number(data.mg4_time_hard),
+
+            // Minigame 5
+            mg5_enabled: Boolean(data.mg5_enabled),
+            mg5_time_normal: Number(data.mg5_time_normal),
+            mg5_time_hard: Number(data.mg5_time_hard)
         }
+
+        console.log('Sending minigame settings update:', minigameData);
         updateSettingsMutation.mutate(minigameData)
     }
 
@@ -163,7 +176,7 @@ const Settings = () => {
     return (
         <Container fluid style={{ minHeight: '100vh', backgroundColor: 'var(--bg-primary)', padding: '2rem' }}>
             <SettingsHeader />
-            
+
             <SettingsTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
             {activeTab === 'settings' && (

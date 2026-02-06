@@ -39,9 +39,10 @@ const MinigameSettings = ({ settings, onSubmit, loading }) => {
             key: 'mg2',
             name: 'Minigame 2 - Color Matching',
             fields: [
-                { key: 'enabled', label: 'Enable', type: 'switch', col: 4 },
-                { key: 'speed_normal', label: 'Normal Speed', type: 'select', col: 4 },
-                { key: 'speed_hard', label: 'Hard Speed', type: 'select', col: 4 }
+                { key: 'enabled', label: 'Enable', type: 'switch', col: 3 },
+                { key: 'rounds', label: 'Rounds', type: 'number', col: 3 },
+                { key: 'speed_normal', label: 'Normal Speed', type: 'select', col: 3 },
+                { key: 'speed_hard', label: 'Hard Speed', type: 'select', col: 3 }
             ]
         },
         {
