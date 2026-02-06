@@ -88,8 +88,14 @@ const Settings = () => {
     const handleScoreSettingsSubmit = (data) => {
         const scoreData = {
             minimum_passing_score: data.minimum_passing_score,
-            hard_mode_threshold: data.hard_mode_threshold
+            hard_mode_threshold: data.hard_mode_threshold,
+            mg1_score_hit: Number(data.mg1_score_hit),
+            mg2_score_max: Number(data.mg2_score_max),
+            mg3_score_round: Number(data.mg3_score_round),
+            mg4_score_max: Number(data.mg4_score_max),
+            mg5_score_hit: Number(data.mg5_score_hit)
         }
+        console.log('Sending score settings update:', scoreData);
         updateSettingsMutation.mutate(scoreData)
     }
 
