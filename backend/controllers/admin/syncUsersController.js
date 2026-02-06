@@ -31,29 +31,35 @@ exports.syncUsers = async (req, res) => {
         let syncedCount = 0;
         let updatedCount = 0;
 
-        const syncPromises = externalUsers.map(async (extUser) => {
-            const name = extUser.empName;
-            const employee_id = extUser.empNumber;
+        // Process in chunks to avoid exhausting DB connection pool
+        const CHUNK_SIZE = 20;
+        for (let i = 0; i < externalUsers.length; i += CHUNK_SIZE) {
+            const chunk = externalUsers.slice(i, i + CHUNK_SIZE);
 
-            if (!name || !employee_id) return;
+            const syncPromises = chunk.map(async (extUser) => {
+                const name = extUser.empName;
+                const employee_id = extUser.empNumber;
 
-            const upsertQuery = `
-                INSERT INTO users (name, employee_id, role)
-                VALUES ($1, $2, 'user')
-                ON CONFLICT (employee_id) 
-                DO UPDATE SET name = EXCLUDED.name
-                RETURNING (xmax = 0) AS inserted
-            `;
+                if (!name || !employee_id) return;
 
-            const result = await pool.query(upsertQuery, [name, employee_id]);
-            if (result.rows[0].inserted) {
-                syncedCount++;
-            } else {
-                updatedCount++;
-            }
-        });
+                const upsertQuery = `
+                    INSERT INTO users (name, employee_id, role)
+                    VALUES ($1, $2, 'user')
+                    ON CONFLICT (employee_id) 
+                    DO UPDATE SET name = EXCLUDED.name
+                    RETURNING (xmax = 0) AS inserted
+                `;
 
-        await Promise.all(syncPromises);
+                const result = await pool.query(upsertQuery, [name, employee_id]);
+                if (result.rows[0].inserted) {
+                    syncedCount++;
+                } else {
+                    updatedCount++;
+                }
+            });
+
+            await Promise.all(syncPromises);
+        }
 
         await logActivity(
             pool,
