@@ -1,4 +1,5 @@
 const pool = require('../../models/db');
+const jwt = require('jsonwebtoken');
 
 exports.login = async (req, res) => {
     const { employee_id } = req.body;
@@ -18,11 +19,23 @@ exports.login = async (req, res) => {
 
         if (result.rows.length > 0) {
             const user = result.rows[0];
+
+            // Create real JWT Token
+            const token = jwt.sign(
+                {
+                    id: user.id,
+                    employee_id: user.employee_id,
+                    role: user.role
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: process.env.JWT_EXPIRE || '7d' }
+            );
+
             res.json({
                 success: true,
                 message: "Login successful",
                 data: user,
-                token: "dummy_token_" + Date.now()
+                token: token
             });
         } else {
             res.status(404).json({

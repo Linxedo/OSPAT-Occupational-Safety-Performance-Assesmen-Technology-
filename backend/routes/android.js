@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateApiKey } = require('../middleware/auth');
+const { validateApiKey, authenticateToken } = require('../middleware/auth');
 const rateLimit = require('express-rate-limit');
 
 // Import controllers
@@ -37,7 +37,9 @@ router.delete("/questions/:id", questionsController.deleteQuestion);
 router.get("/settings", settingsController.getSettings);
 router.post("/settings", settingsController.updateSettings);
 router.get("/settings/stream", settingsController.streamSettings); //Sync Antara Android Dengan Web
-router.post("/results", testResultsController.saveTestResults);
-router.post("/user-answers", userAnswersController.saveUserAnswers);
+
+// Protected Routes (Require Token)
+router.post("/results", authenticateToken, testResultsController.saveTestResults);
+router.post("/user-answers", authenticateToken, userAnswersController.saveUserAnswers);
 
 module.exports = router;
